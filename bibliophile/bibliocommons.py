@@ -17,25 +17,33 @@ Author: David Cain
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from collections import namedtuple
-import logging
 import html
+import logging
 import urllib.parse as urlparse
+from collections import namedtuple
 
 import grequests
 from bs4 import BeautifulSoup
 
 from bibliophile import syndetics
 
-
 logger = logging.getLogger('bibliophile')
-Book = namedtuple('Book', ['title', 'author', 'description', 'call_number',
-                           'cover_image', 'full_record_link'])
+Book = namedtuple(
+    'Book',
+    [
+        'title',
+        'author',
+        'description',
+        'call_number',
+        'cover_image',
+        'full_record_link',
+    ],
+)
 
 
 def grouper(input_list, chunk_size):
     for i in range(0, len(input_list), chunk_size):
-        yield input_list[i: i + chunk_size]
+        yield input_list[i : i + chunk_size]
 
 
 class UnstableAPIError(RuntimeError):
@@ -44,6 +52,7 @@ class UnstableAPIError(RuntimeError):
 
 class QueryBuilder:
     """ Construct BiblioCommons catalog queries for one or more books. """
+
     @staticmethod
     def single_query(book, print_only=True):
         """ Get query for one book - Use its ISBN (preferred) or title + author. """
@@ -63,7 +72,7 @@ class QueryBuilder:
 
     @classmethod
     def bibliocommons_query(cls, books, branch, isolanguage):
-        """ Get query for "any of these books available at this branch."
+        """Get query for "any of these books available at this branch."
 
         This query can be used in any Bibliocommons-driven catalog.
         """
@@ -84,7 +93,10 @@ class QueryBuilder:
 
 class BiblioParser:
     """ Use undocumented BiblioCommons APIs to extract book information. """
-    def __init__(self, books, branch=None, biblio_subdomain='seattle', isolanguage=None):
+
+    def __init__(
+        self, books, branch=None, biblio_subdomain='seattle', isolanguage=None
+    ):
         self.books = books
         self.branch = branch
         self.root = f'https://{biblio_subdomain}.bibliocommons.com/'
@@ -92,7 +104,7 @@ class BiblioParser:
 
     @staticmethod
     def extract_item_id(rss_link):
-        """ Extract a numeric ID from a link to a book summary.
+        """Extract a numeric ID from a link to a book summary.
 
         seattle.bibliocommons.com/item/show/2837203030_moby_dick -> 2837203030
 
@@ -111,7 +123,7 @@ class BiblioParser:
         return int(item_id)
 
     def async_record(self, book):
-        """ Return an asynchronous request for info about the given book.
+        """Return an asynchronous request for info about the given book.
 
         The response content will be the "full record," containing information
         about the given title.
@@ -129,7 +141,7 @@ class BiblioParser:
         return grequests.get(url, hooks={'response': attach_book})
 
     def async_book_lookup(self, query):
-        """ Formulate & return a request that executes the query.
+        """Formulate & return a request that executes the query.
 
         The object can be asynchronously queried in a bunch with grequests.
         """
@@ -174,7 +186,7 @@ class BiblioParser:
             author=author,
             call_number=call_number,
             description=description,
-            cover_image=cover_image
+            cover_image=cover_image,
         )
 
     def matching_books(self, query_response):

@@ -16,5 +16,5 @@ class SyndeticsTest(unittest.TestCase):
             higher_quality_cover(
                 f'{base_url}?isbn=9780140449266/SC.GIF&client=sfpl&type=xw12&oclc='
             ),
-            f'{base_url}?isbn=9780140449266%2FLC.jpg&client=sfpl&type=xw12'
+            f'{base_url}?isbn=9780140449266%2FLC.jpg&client=sfpl&type=xw12',
         )

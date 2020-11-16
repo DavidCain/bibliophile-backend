@@ -6,7 +6,7 @@ import urllib.parse as urlparse
 
 
 def higher_quality_cover(image_url):
-    """ Modify a book cover request to be higher quality.
+    """Modify a book cover request to be higher quality.
 
     By default, the BiblioCommons catalog shows medium-quality images (GIF,
     187x187). There are higher-quality images available though (JPG, 400x400).
