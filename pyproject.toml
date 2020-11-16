@@ -29,8 +29,15 @@ grequests = "*"
 lxml = "*"
 requests = "*"
 
+# Optional dependencies for static type checking
+mypy = { version = "*", optional = true }
+
+[tool.poetry.extras]
+typing = ["mypy"]
+
 [tool.poetry.dev-dependencies]
 black = { version = "*", allow-prereleases = true }
 isort = ">= 5.0.0"  # Version 5 includes Black compatibility
+mypy = "*"
 pylint = "*"
 pytest = "*"

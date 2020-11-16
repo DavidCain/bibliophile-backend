@@ -2,11 +2,12 @@
 
 poetry_dev_bootstrap_file = .poetry_dev_up_to_date
 poetry_prod_bootstrap_file = .poetry_prod_up_to_date
+poetry_typing_bootstrap_file = .poetry_typing_up_to_date
 
 
 # Default `make` will give everything's that helpful for local development.
 .PHONY: all
-all: install-dev
+all: install-dev install-typecheck
 
 .PHONY: check-poetry
 check-poetry:
@@ -18,6 +19,18 @@ $(poetry_dev_bootstrap_file): poetry.lock
 	touch $(poetry_dev_bootstrap_file).notyet
 	poetry install --no-root
 	mv $(poetry_dev_bootstrap_file).notyet $(poetry_dev_bootstrap_file)
+	@# Remove the prod bootstrap file, since we now have dev deps present.
+	rm -f $(poetry_prod_bootstrap_file)
+
+# All type modules are given as their own extra
+# If you don't want to deal with overhead, `install-dev` is plenty for local dev.
+.PHONY: install-typecheck
+install-typecheck: $(poetry_typing_bootstrap_file)
+$(poetry_typing_bootstrap_file): poetry.lock
+	touch $(poetry_typing_bootstrap_file).notyet
+	poetry install --no-root
+	poetry install --extras=typing
+	mv $(poetry_typing_bootstrap_file).notyet $(poetry_typing_bootstrap_file)
 	@# Remove the prod bootstrap file, since we now have dev deps present.
 	rm -f $(poetry_prod_bootstrap_file)
 
@@ -41,6 +54,12 @@ fix: install-dev
 	black bibliophile
 	isort bibliophile
 
+.PHONY: typecheck
+typecheck: install-typecheck
+	@# TODO: mypy will start being able to read from pyproject.toml soon
+	@# (leaving the superfluous `--config-file` argument here to make that clear)
+	poetry run mypy --config-file mypy.ini bibliophile
+
 .PHONY: lint
 lint: install-dev
 	black --fast --check bibliophile
@@ -50,13 +69,15 @@ lint: install-dev
 
 .PHONY: test
 test: install-dev
-	python3 -m pytest bibliophile
+	poetry run pytest bibliophile
 
 .PHONY: check
-check: lint test
+check: lint typecheck test
 
 .PHONY: clean
 clean:
 	rm -f $(poetry_dev_bootstrap_file)
 	rm -f $(poetry_prod_bootstrap_file)
+	rm -f $(poetry_typing_bootstrap_file)
+	rm -rf .mypy_cache
 	find . -name '*.pyc' -delete
