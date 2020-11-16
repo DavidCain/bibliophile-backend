@@ -16,6 +16,20 @@ source = ["bibliophile"]
 profile = "black"
 known_first_party = "bibliophile"
 
+[tool.pylint.'MESSAGES CONTROL']
+disable = [
+  # I'm okay with TODO comments
+  'fixme',
+  # module-level `logger` should be allowed
+  'invalid-name',
+  # Not all modules need a docstring
+  'missing-docstring',
+]
+
+[tool.pylint.REPORTS]
+reports = false
+score = false
+
 [tool.poetry]
 name = "bibliophile"
 version = "0.1.0"

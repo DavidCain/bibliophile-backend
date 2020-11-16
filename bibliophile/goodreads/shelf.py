@@ -37,7 +37,7 @@ class ShelfReader:
         self.dev_key = dev_key
 
     @staticmethod
-    def get(path, params: Dict[str, Union[str, int]]):
+    def get(path, params):
         """ Return BS tag for the response to a given Goodreads API route. """
         endpoint = urlparse.urljoin('https://www.goodreads.com/', path)
         resp = requests.get(endpoint, params=params)
