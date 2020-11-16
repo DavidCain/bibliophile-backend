@@ -64,3 +64,4 @@ See the [Bibliophile README][bibliophile-repo] for instructions.
 [bibliophile-repo]: https://github.com/DavidCain/bibliophile
 [goodreads-api]: https://www.goodreads.com/api
 [goodreads-api-terms]: https://www.goodreads.com/api/terms
+[poetry-install]: https://python-poetry.org/docs/#installation

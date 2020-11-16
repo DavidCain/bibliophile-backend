@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "bibliophile"
+version = "0.1.0"
+description = "Find books at your local library"
+license = "GPL-3.0"
+readme = "README.md"
+homepage = "https://biblo.dcain.me"
+repository = "https://github.com/DavidCain/bibliophile/"
+authors = ["David Cain <davidjosephcain@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+beautifulsoup4 = "*"
+grequests = "*"
+lxml = "*"
+requests = "*"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
