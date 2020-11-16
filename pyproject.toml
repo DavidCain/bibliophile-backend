@@ -8,6 +8,10 @@ skip-string-normalization = true
 # For example, f-strings prove that code requires 3.6 and Black will format differently.
 target_version = ["py36"]
 
+[tool.coverage.run]
+branch = true
+source = ["bibliophile"]
+
 [tool.isort]
 profile = "black"
 known_first_party = "bibliophile"
@@ -29,10 +33,14 @@ grequests = "*"
 lxml = "*"
 requests = "*"
 
+# Optional dependencies for generating & reporting test coverage stats
+coverage = { version = "*", optional = true }
+
 # Optional dependencies for static type checking
 mypy = { version = "*", optional = true }
 
 [tool.poetry.extras]
+code_coverage = ["coverage"]  # TODO: Integrate with `codecov`
 typing = ["mypy"]
 
 [tool.poetry.dev-dependencies]

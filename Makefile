@@ -18,6 +18,7 @@ install-dev: check-poetry $(poetry_dev_bootstrap_file)
 $(poetry_dev_bootstrap_file): poetry.lock
 	touch $(poetry_dev_bootstrap_file).notyet
 	poetry install --no-root
+	poetry install --extras=code_coverage
 	mv $(poetry_dev_bootstrap_file).notyet $(poetry_dev_bootstrap_file)
 	@# Remove the prod bootstrap file, since we now have dev deps present.
 	rm -f $(poetry_prod_bootstrap_file)
@@ -69,7 +70,7 @@ lint: install-dev
 
 .PHONY: test
 test: install-dev
-	poetry run pytest bibliophile
+	poetry run coverage run -m pytest bibliophile
 
 .PHONY: check
 check: lint typecheck test
