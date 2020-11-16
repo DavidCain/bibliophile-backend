@@ -1,3 +1,13 @@
+[tool.black]
+include = '\.py$'
+# Don't attempt to normalize strings
+# (Preserves the convention of "single quotes for data, double quotes for humans")
+skip-string-normalization = true
+
+[tool.isort]
+profile = "black"
+known_first_party = "bibliophile"
+
 [tool.poetry]
 name = "bibliophile"
 version = "0.1.0"
@@ -16,4 +26,7 @@ lxml = "*"
 requests = "*"
 
 [tool.poetry.dev-dependencies]
+black = { version = "*", allow-prereleases = true }
+isort = ">= 5.0.0"  # Version 5 includes Black compatibility
+pylint = "*"
 pytest = "*"

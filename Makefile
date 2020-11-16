@@ -31,9 +31,29 @@ $(poetry_prod_bootstrap_file): poetry.lock
 	@# Remove the dev bootstrap file, since the `--no-dev` removed any present dev deps
 	rm -f $(poetry_dev_bootstrap_file)
 
+.PHONY: check
+check: lint test
+
+# Run automatic code formatters/linters that don't require human input
+# (might fix a broken `make check`)
+.PHONY: fix
+fix: install-dev
+	black bibliophile
+	isort bibliophile
+
+.PHONY: lint
+lint: install-dev
+	black --fast --check bibliophile
+	isort --check bibliophile
+	@# '0' tells pylint to auto-detect available processors
+	pylint --jobs 0 bibliophile
+
 .PHONY: test
 test: install-dev
 	python3 -m pytest bibliophile
+
+.PHONY: check
+check: lint test
 
 .PHONY: clean
 clean:
