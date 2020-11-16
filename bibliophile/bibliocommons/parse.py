@@ -1,94 +1,21 @@
-"""
-See which books you want to read are available at your local library.
-
-Author: David Cain
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
 import html
 import logging
 import urllib.parse as urlparse
-from collections import namedtuple
 
 import grequests
 from bs4 import BeautifulSoup
 
-from bibliophile import syndetics
+from .. import syndetics
+from ..errors import UnstableAPIError
+from .query import QueryBuilder
+from .types import Book
 
 logger = logging.getLogger('bibliophile')
-Book = namedtuple(
-    'Book',
-    [
-        'title',
-        'author',
-        'description',
-        'call_number',
-        'cover_image',
-        'full_record_link',
-    ],
-)
 
 
 def grouper(input_list, chunk_size):
     for i in range(0, len(input_list), chunk_size):
         yield input_list[i : i + chunk_size]
-
-
-class UnstableAPIError(RuntimeError):
-    """ Indicates a failed assumption about an unstable API. """
-
-
-class QueryBuilder:
-    """ Construct BiblioCommons catalog queries for one or more books. """
-
-    @staticmethod
-    def single_query(book, print_only=True):
-        """ Get query for one book - Use its ISBN (preferred) or title + author. """
-        conditions = {}
-
-        if book.isbn:
-            conditions['identifier'] = book.isbn
-        else:
-            conditions['contributor'] = book.author
-            conditions['title'] = book.title
-            if print_only:
-                conditions['formatcode'] = 'BK'
-
-        rules = [f'{name}:({val})' for name, val in conditions.items()]
-        query = ' AND '.join(rules)
-        return f'({query})' if len(rules) > 1 else query
-
-    @classmethod
-    def bibliocommons_query(cls, books, branch, isolanguage):
-        """Get query for "any of these books available at this branch."
-
-        This query can be used in any Bibliocommons-driven catalog.
-        """
-        isbn_match = ' OR '.join(cls.single_query(book) for book in books)
-        parts = []
-        if branch:
-            parts.append(f'available:"{branch}"')
-        if isolanguage:
-            parts.append(f'isolanguage:"{isolanguage}"')
-
-        query = f'({isbn_match}) {" ".join(parts)}' if parts else isbn_match
-
-        if len(query) > 900:
-            # Shouldn't happen in practice, since we group queries
-            raise ValueError("BiblioCommons queries are limited to 900 chars!")
-        return query
 
 
 class BiblioParser:

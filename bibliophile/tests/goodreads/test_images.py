@@ -1,6 +1,6 @@
 import unittest
 
-from ..goodreads import higher_quality_cover
+from bibliophile.goodreads.images import higher_quality_cover
 
 
 class CoverImageTests(unittest.TestCase):
