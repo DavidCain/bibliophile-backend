@@ -18,6 +18,8 @@ known_first_party = "bibliophile"
 
 [tool.pylint.'MESSAGES CONTROL']
 disable = [
+  # Black handles all formatting
+  'format',
   # I'm okay with TODO comments
   'fixme',
   # module-level `logger` should be allowed
