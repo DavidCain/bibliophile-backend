@@ -66,4 +66,6 @@ clean:
 	rm -f $(poetry_dev_bootstrap_file)
 	rm -f $(poetry_prod_bootstrap_file)
 	rm -rf .mypy_cache
+	rm -rf htmlcov
+	rm -rf bibliophile.egg-info dist
 	find . -name '*.pyc' -delete
