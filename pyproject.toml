@@ -39,7 +39,7 @@ description = "Find books at your local library"
 license = "GPL-3.0"
 readme = "README.md"
 homepage = "https://biblo.dcain.me"
-repository = "https://github.com/DavidCain/bibliophile/"
+repository = "https://github.com/DavidCain/bibliophile-backend/"
 authors = ["David Cain <davidjosephcain@gmail.com>"]
 # Per PEP 561, this special file indicates that the Python source is typed
 include = ["bibliophile/py.typed"]
