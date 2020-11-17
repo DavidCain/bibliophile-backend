@@ -50,13 +50,14 @@ lxml = "*"
 requests = "*"
 
 # Optional dependencies for generating & reporting test coverage stats
+codecov = { version = "*", optional = true }
 coverage = { version = "*", optional = true }
 
 # Optional dependencies for static type checking
 mypy = { version = "*", optional = true }
 
 [tool.poetry.extras]
-code_coverage = ["coverage"]  # TODO: Integrate with `codecov`
+code_coverage = ["coverage", "codecov"]
 typing = ["mypy"]
 
 [tool.poetry.dev-dependencies]

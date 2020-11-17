@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/DavidCain/bibliophile-backend.svg?branch=master)](https://travis-ci.com/DavidCain/bibliophile-backend)
+[![Code Coverage](https://codecov.io/gh/DavidCain/bibliophile-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/DavidCain/bibliophile-backend)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 # Bibliophile backend

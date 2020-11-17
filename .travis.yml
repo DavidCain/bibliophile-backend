@@ -13,3 +13,4 @@ install:
 # This repository is so small that breaking linting, testing, etc. into jobs is not efficient
 script:
   - make check
+  - bash <(curl -s https://codecov.io/bash) -cF Python
