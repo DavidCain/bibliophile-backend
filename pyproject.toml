@@ -41,6 +41,8 @@ readme = "README.md"
 homepage = "https://biblo.dcain.me"
 repository = "https://github.com/DavidCain/bibliophile/"
 authors = ["David Cain <davidjosephcain@gmail.com>"]
+# Per PEP 561, this special file indicates that the Python source is typed
+include = ["bibliophile/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
