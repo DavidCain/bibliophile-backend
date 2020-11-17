@@ -1,4 +1,5 @@
 import typing
+from typing import Optional
 
 
 class Book(typing.NamedTuple):
@@ -6,5 +7,5 @@ class Book(typing.NamedTuple):
     author: str
     description: str
     call_number: str
-    cover_image: str
-    full_record_link: str
+    cover_image: Optional[str]
+    full_record_link: Optional[str]

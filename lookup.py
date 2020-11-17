@@ -23,10 +23,10 @@ import csv
 import logging
 import os
 import sys
+from typing import Optional
 
-from bibliophile.goodreads import ShelfReader
 from bibliophile.bibliocommons import BiblioParser
-
+from bibliophile.goodreads import ShelfReader
 
 logger = logging.getLogger('bibliophile')
 logger.setLevel(logging.INFO)
@@ -35,7 +35,15 @@ ch.setFormatter(logging.Formatter('%(message)s'))
 logger.addHandler(ch)
 
 
-def find_books(user_id, dev_key, shelf, branch, biblio, csvname=None, language=None):
+def find_books(  # pylint: disable=too-many-arguments
+    user_id: str,
+    dev_key: str,
+    shelf: str,
+    biblio_subdomain: str,
+    branch: Optional[str],
+    csvname: Optional[str] = None,
+    language: Optional[str] = None,
+) -> None:
     """ Print books to stdout, optionally export to csvname. """
     reader = ShelfReader(user_id, dev_key)
     wanted_books = list(reader.wanted_books(shelf))
@@ -45,7 +53,14 @@ def find_books(user_id, dev_key, shelf, branch, biblio, csvname=None, language=N
         csvfile = open(csvname, 'w')
         writer = csv.writer(csvfile)
         writer.writerow(["Title", "Author", "Call Number"])
-    for book in BiblioParser(wanted_books, branch, biblio, language):
+
+    biblio_parser = BiblioParser(
+        biblio_subdomain=biblio_subdomain,
+        branch=branch,
+        isolanguage=language,
+    )
+
+    for book in biblio_parser.all_matching_books(wanted_books):
         logger.info("  %s - %s", book.title, book.call_number)
         logger.debug("%s", book)
         if writer:
@@ -60,34 +75,36 @@ if __name__ == '__main__':
         description="See which books you want to read are available at your local library."
     )
     parser.add_argument(
-        'user_id', type=int,
-        nargs='?', default=os.environ.get('GOODREADS_USER_ID'),
-        help="User's ID on Goodreads"
+        'user_id',
+        type=int,
+        nargs='?',
+        default=os.environ.get('GOODREADS_USER_ID'),
+        help="User's ID on Goodreads",
     )
     parser.add_argument(
         'dev_key',
-        nargs='?', default=os.environ.get('GOODREADS_DEV_KEY'),
-        help="Goodreads developer key. See https://www.goodreads.com/api"
+        nargs='?',
+        default=os.environ.get('GOODREADS_DEV_KEY'),
+        help="Goodreads developer key. See https://www.goodreads.com/api",
     )
     parser.add_argument(
-        '--branch', default='MAIN',
-        help="Only show titles available at this branch. e.g. 'Fremont Branch'"
+        '--branch',
+        default='MAIN',
+        help="Only show titles available at this branch. e.g. 'Fremont Branch'",
     )
     parser.add_argument(
-        '--shelf', default='to-read',
-        help="Name of the shelf containing desired books"
+        '--shelf', default='to-read', help="Name of the shelf containing desired books"
     )
     parser.add_argument(
-        '--biblio', default='sfpl',
-        help="subdomain of bibliocommons.com (seattle, vpl, etc.)"
+        '--biblio',
+        default='sfpl',
+        help="subdomain of bibliocommons.com (seattle, vpl, etc.)",
     )
     parser.add_argument(
-        '--csv', default=None,
-        help="Output results to a CSV of this name."
+        '--csv', default=None, help="Output results to a CSV of this name."
     )
     parser.add_argument(
-        '--language', default='eng',
-        help="Restrict results to this language."
+        '--language', default='eng', help="Restrict results to this language."
     )
 
     args = parser.parse_args()
@@ -95,5 +112,13 @@ if __name__ == '__main__':
         parser.error("Pass user_id positionally, or set GOODREADS_USER_ID")
     if not args.dev_key:
         parser.error("Pass dev_key positionally, or set GOODREADS_DEV_KEY")
-    find_books(args.user_id, args.dev_key, args.shelf, args.branch,
-               args.biblio, args.csv, args.language)
+
+    find_books(
+        user_id=args.user_id,
+        dev_key=args.dev_key,
+        shelf=args.shelf,
+        biblio_subdomain=args.biblio,
+        branch=args.branch,
+        csvname=args.csv,
+        language=args.language,
+    )
