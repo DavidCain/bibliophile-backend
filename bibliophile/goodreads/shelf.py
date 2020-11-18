@@ -21,7 +21,7 @@ logger = logging.getLogger('bibliophile')
 PER_PAGE: int = 200
 
 
-class ShelfReader:  # pylint: disable=too-few-public-methods
+class ShelfReader:
     """ Read books from a given user's Goodreads shelves. """
 
     def __init__(self, user_id: str, dev_key: str):
@@ -40,6 +40,17 @@ class ShelfReader:  # pylint: disable=too-few-public-methods
         resp = requests.get(endpoint, params=params)
         return BeautifulSoup(resp.content, 'xml').find('GoodreadsResponse')
 
+    @staticmethod
+    def book_from_review(review: Tag) -> Book:
+        """ Parse a <review> XML tag into a Book. """
+        return Book(
+            isbn=review.isbn.text or None,  # Can be blank! e.g. in e-Books
+            title=review.title.text,
+            author=review.author.find('name').text,
+            description=review.description.text,
+            image_url=images.higher_quality_cover(review.image_url.text),
+        )
+
     def wanted_books(self, shelf: str) -> Iterator[Book]:
         """ All books that the user wants to read. """
         # See: https://www.goodreads.com/api/index#reviews.list
@@ -57,11 +68,5 @@ class ShelfReader:  # pylint: disable=too-few-public-methods
             },
         )
 
-        for review in body.find('reviews').findAll('review'):
-            yield Book(
-                isbn=review.isbn.text,  # Can be blank! e.g. in e-Books
-                title=review.title.text,
-                author=review.author.find('name').text,
-                description=review.description.text,
-                image_url=images.higher_quality_cover(review.image_url.text),
-            )
+        for review_tag in body.find('reviews').findAll('review'):
+            yield self.book_from_review(review_tag)
