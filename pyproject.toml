@@ -34,7 +34,7 @@ score = false
 
 [tool.poetry]
 name = "bibliophile"
-version = "0.1.0"
+version = "0.1.1"
 description = "Find books at your local library"
 license = "GPL-3.0"
 readme = "README.md"

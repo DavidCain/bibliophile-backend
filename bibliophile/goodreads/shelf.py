@@ -25,7 +25,12 @@ class ShelfReader:  # pylint: disable=too-few-public-methods
     """ Read books from a given user's Goodreads shelves. """
 
     def __init__(self, user_id: str, dev_key: str):
+        if not user_id:
+            raise ValueError("User ID required!")
         self.user_id = user_id
+
+        if not dev_key:
+            raise ValueError("Dev key required!")
         self.dev_key = dev_key
 
     @staticmethod

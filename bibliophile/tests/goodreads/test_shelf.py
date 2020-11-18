@@ -9,6 +9,18 @@ from bibliophile.goodreads.types import Book as GoodreadsBook
 
 
 class ShelfTests(unittest.TestCase):
+    def test_user_id_required(self):
+        with self.assertRaises(ValueError):
+            ShelfReader(user_id='', dev_key='123')
+        with self.assertRaises(ValueError):
+            ShelfReader(user_id=None, dev_key='abc')
+
+    def test_key_required(self):
+        with self.assertRaises(ValueError):
+            ShelfReader(user_id='123456789', dev_key='')
+        with self.assertRaises(ValueError):
+            ShelfReader(user_id='123456789', dev_key=None)
+
     def test_wanted_books(self):
         reader = ShelfReader(
             user_id='123456789',
