@@ -2,24 +2,29 @@ import unittest
 
 from bibliophile.bibliocommons.errors import QueryError
 from bibliophile.bibliocommons.query import QueryBuilder
+from bibliophile.bibliocommons.types import BookDescription
 from bibliophile.goodreads import Book as GoodreadsBook
 
-don_quixote = GoodreadsBook(
-    goodreads_id="3836",
-    isbn="0142437239",
-    title="Don Quixote",
-    author="Miguel de Cervantes",
-    description="Windmills, Sancho Panza, etc.",
-    image_url="not relevant, so not a real URL",
+don_quixote = BookDescription.from_goodreads_book(
+    GoodreadsBook(
+        goodreads_id="3836",
+        isbn="0142437239",
+        title="Don Quixote",
+        author="Miguel de Cervantes",
+        description="Windmills, Sancho Panza, etc.",
+        image_url="not relevant, so not a real URL",
+    )
 )
 
-moby_dick = GoodreadsBook(
-    goodreads_id="153747",
-    isbn=None,  # It *does* have an ISBN, but we're pretending...
-    title="Moby Dick",
-    author="Herman Melville",
-    description="Ahab just can't let it go",
-    image_url="not relevant, so not a real URL",
+moby_dick = BookDescription.from_goodreads_book(
+    GoodreadsBook(
+        goodreads_id="153747",
+        isbn=None,  # It *does* have an ISBN, but we're pretending...
+        title="Moby Dick",
+        author="Herman Melville",
+        description="Ahab just can't let it go",
+        image_url="not relevant, so not a real URL",
+    )
 )
 
 

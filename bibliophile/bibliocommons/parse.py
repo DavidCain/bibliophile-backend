@@ -10,9 +10,8 @@ from bs4.element import Tag
 
 from .. import syndetics
 from ..errors import UnstableAPIError
-from ..goodreads.types import Book as GoodreadsBook
 from .query import QueryBuilder
-from .types import Book
+from .types import Book, BookDescription
 
 logger = logging.getLogger('bibliophile')
 
@@ -145,29 +144,29 @@ class BiblioParser:
         text: str = call_num.text
         return text
 
-    def catalog_results(self, books: List[GoodreadsBook]) -> Iterator[Book]:
+    def catalog_results(self, books: List[BookDescription]) -> Iterator[Book]:
         """ Yield all books found in the catalog, in no particular order. """
 
         def grouper(
             # (This will work with any type - could use TypeVar if needed generically)
-            input_list: List[GoodreadsBook],
+            input_list: List[BookDescription],
             chunk_size: int,
-        ) -> Iterator[List[GoodreadsBook]]:
+        ) -> Iterator[List[BookDescription]]:
             for i in range(0, len(input_list), chunk_size):
                 yield input_list[i : i + chunk_size]
 
         # Undocumented, but the API appears to only support lookup of 10 books
         # (We also have a ~900 character search max to contend with)
-        queries = (
+        query_strings = (
             QueryBuilder.bibliocommons_query(isbn_chunk, self.branch, self.isolanguage)
             for isbn_chunk in grouper(books, 10)
         )
-        lookup_requests = [self.async_book_lookup(q) for q in queries]
+        lookup_requests = [self.async_book_lookup(q) for q in query_strings]
         for response in grequests.imap(lookup_requests):
             for book in self.matching_books(response):
                 yield book
 
-    def all_matching_books(self, books: List[GoodreadsBook]) -> Iterator[Book]:
+    def all_matching_books(self, books: List[BookDescription]) -> Iterator[Book]:
         """ Yield all matching books for the supplied books & branch. """
         search = "Searching library catalog for books"
         if self.branch:

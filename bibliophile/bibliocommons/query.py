@@ -1,7 +1,7 @@
 from typing import Iterable, Optional
 
-from ..goodreads.types import Book as GoodreadsBook
 from .errors import QueryError
+from .types import BookDescription
 
 # BiblioCommons will ignore any query over 900 characters.
 # This was experimentally derived using the ASCII character set.
@@ -13,7 +13,7 @@ class QueryBuilder:  # pylint: disable=too-few-public-methods
     """ Construct BiblioCommons catalog queries for one or more books. """
 
     @staticmethod
-    def _single_query(book: GoodreadsBook, print_only: bool = True) -> str:
+    def _single_query(book: BookDescription, print_only: bool = True) -> str:
         """ Get query for one book - Use its ISBN (preferred) or title + author. """
         conditions = {}
 
@@ -32,7 +32,7 @@ class QueryBuilder:  # pylint: disable=too-few-public-methods
     @classmethod
     def _query(
         cls,
-        books: Iterable[GoodreadsBook],
+        books: Iterable[BookDescription],
         branch: Optional[str],
         isolanguage: Optional[str],
         print_only: bool,
@@ -56,7 +56,7 @@ class QueryBuilder:  # pylint: disable=too-few-public-methods
     @classmethod
     def bibliocommons_query(
         cls,
-        books: Iterable[GoodreadsBook],
+        books: Iterable[BookDescription],
         branch: Optional[str],
         isolanguage: Optional[str],
         print_only: bool = True,

@@ -23,10 +23,12 @@ import csv
 import logging
 import os
 import sys
-from typing import Optional
+from typing import List, Optional
 
 from bibliophile.bibliocommons import BiblioParser
+from bibliophile.bibliocommons.types import BookDescription
 from bibliophile.goodreads import ShelfReader
+from bibliophile.goodreads.types import Book as GoodreadsBook
 
 logger = logging.getLogger('bibliophile')
 logger.setLevel(logging.INFO)
@@ -46,7 +48,7 @@ def find_books(  # pylint: disable=too-many-arguments
 ) -> None:
     """ Print books to stdout, optionally export to csvname. """
     reader = ShelfReader(user_id, dev_key)
-    wanted_books = list(reader.wanted_books(shelf))
+    wanted_books: List[GoodreadsBook] = list(reader.wanted_books(shelf))
     logger.info("%d books found on shelf", len(wanted_books))
     writer = None
     if csvname:
@@ -60,7 +62,8 @@ def find_books(  # pylint: disable=too-many-arguments
         isolanguage=language,
     )
 
-    for book in biblio_parser.all_matching_books(wanted_books):
+    descriptions = [BookDescription.from_goodreads_book(book) for book in wanted_books]
+    for book in biblio_parser.all_matching_books(descriptions):
         logger.info("  %s - %s", book.title, book.call_number)
         logger.debug("%s", book)
         if writer:
