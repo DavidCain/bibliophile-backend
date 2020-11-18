@@ -44,6 +44,7 @@ class ShelfReader:
     def book_from_review(review: Tag) -> Book:
         """ Parse a <review> XML tag into a Book. """
         return Book(
+            goodreads_id=review.find('id', {'type': 'integer'}).text,
             isbn=review.isbn.text or None,  # Can be blank! e.g. in e-Books
             title=review.title.text,
             author=review.author.find('name').text,

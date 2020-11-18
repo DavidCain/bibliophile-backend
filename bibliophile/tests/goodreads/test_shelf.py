@@ -129,6 +129,7 @@ class ShelfTests(unittest.TestCase):
             all_books,
             [
                 GoodreadsBook(
+                    goodreads_id="135479",
                     isbn='0140285601',  # ISBN13: 9780140285604
                     title="Cat's Cradle",
                     author='Kurt Vonnegut Jr.',

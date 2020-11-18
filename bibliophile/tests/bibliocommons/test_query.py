@@ -5,6 +5,7 @@ from bibliophile.bibliocommons.query import QueryBuilder
 from bibliophile.goodreads import Book as GoodreadsBook
 
 don_quixote = GoodreadsBook(
+    goodreads_id="3836",
     isbn="0142437239",
     title="Don Quixote",
     author="Miguel de Cervantes",
@@ -13,7 +14,8 @@ don_quixote = GoodreadsBook(
 )
 
 moby_dick = GoodreadsBook(
-    isbn=None,
+    goodreads_id="153747",
+    isbn=None,  # It *does* have an ISBN, but we're pretending...
     title="Moby Dick",
     author="Herman Melville",
     description="Ahab just can't let it go",
@@ -84,6 +86,7 @@ class QueryBuilderTest(unittest.TestCase):
         """ A query is only valid when it is below 900 characters. """
         lots_of_books = [
             GoodreadsBook(
+                goodreads_id="123456",
                 isbn=f"0000000{i:03d}",
                 title="Unknown",
                 author="Unknown",
