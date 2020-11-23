@@ -92,7 +92,7 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--branch',
-        default='MAIN',
+        default='*MAIN',
         help="Only show titles available at this branch. e.g. 'Fremont Branch'",
     )
     parser.add_argument(

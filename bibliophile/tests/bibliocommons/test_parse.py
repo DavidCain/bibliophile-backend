@@ -89,7 +89,7 @@ class BiblioParserTest(unittest.TestCase):
     def test_no_books(self):
         parser = BiblioParser(
             biblio_subdomain='sfpl',
-            branch='MAIN',
+            branch='*MAIN',
             isolanguage='eng',
         )
         self.assertEqual(list(parser.all_matching_books([])), [])
