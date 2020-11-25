@@ -38,8 +38,8 @@ check: lint test
 # (might fix a broken `make check`)
 .PHONY: fix
 fix: install-dev
-	black bibliophile
-	isort bibliophile
+	poetry run black bibliophile
+	poetry run isort bibliophile
 
 .PHONY: typecheck
 typecheck: install-dev
@@ -49,10 +49,10 @@ typecheck: install-dev
 
 .PHONY: lint
 lint: install-dev
-	black --fast --check bibliophile
-	isort --check bibliophile
+	poetry run black --fast --check bibliophile
+	poetry run isort --check bibliophile
 	@# '0' tells pylint to auto-detect available processors
-	pylint --jobs 0 bibliophile
+	poetry run pylint --jobs 0 bibliophile
 
 .PHONY: test
 test: install-dev
